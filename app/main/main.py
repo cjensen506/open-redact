@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Response
 import io
+import uvicorn
 from app.main.pdf_processing import Redactor
 
 app = FastAPI()
@@ -24,3 +25,6 @@ async def create_upload_file(file: UploadFile = File(...)):
     response = Response(content=redactor.redaction(), media_type="application/pdf")
 
     return response
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=5000, log_level="info")

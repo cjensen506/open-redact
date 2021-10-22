@@ -1,6 +1,7 @@
 import re
 import spacy
 
+
 class SensitiveText:
 
     # constructor
@@ -8,6 +9,12 @@ class SensitiveText:
         self.text_to_check = text_to_check
 
         # static methods work independent of class object
+
+    def __init__(self, text_to_check):
+        self.text_to_check = text_to_check
+        self.emails = self.email_check(self.text_to_check)
+        self.names = self.name_check(self.text_to_check)
+
     @staticmethod
     def email_check(lines):
 

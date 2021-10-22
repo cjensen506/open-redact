@@ -1,28 +1,10 @@
 # imports
 import fitz
 import re
+from app.main.sensitive_text_check import SensitiveText
 
 
 class Redactor:
-
-    # static methods work independent of class object
-    @staticmethod
-    def get_sensitive_data(lines):
-
-        """ Function to get all the lines """
-
-        # email regex
-        EMAIL_REG = r"([\w\.\d]+\@[\w\d]+\.[\w\d]+)"
-        for line in lines:
-
-            # matching the regex to each line
-            if re.search(EMAIL_REG, line, re.IGNORECASE):
-                search = re.search(EMAIL_REG, line, re.IGNORECASE)
-
-                # yields creates a generator
-                # generator is used to return
-                # values in between function iterations
-                yield search.group(1)
 
     # constructor
     def __init__(self, mem_area):
@@ -44,9 +26,17 @@ class Redactor:
             # page._wrapContents()
 
             # getting the rect boxes which consists the matching email regex
-            sensitive = self.get_sensitive_data(page.getText("text").split('\n'))
+            my_sensitive_text = SensitiveText(page.getText("text").split('\n'))
+            #sensitive = my_sensitive_text.emails
+            #sensitive = self.get_sensitive_data(page.getText("text").split('\n'))
 
-            for data in sensitive:
+            for data in my_sensitive_text.emails:
+                areas = page.searchFor(data)
+
+                # drawing outline over sensitive datas
+                [page.addRedactAnnot(area, fill=(0, 0, 0)) for area in areas]
+
+            for data in my_sensitive_text.names:
                 areas = page.searchFor(data)
 
                 # drawing outline over sensitive datas
