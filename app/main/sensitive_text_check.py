@@ -21,11 +21,11 @@ class SensitiveText:
         """ Function to recognize email address """
 
         # email regex
-        EMAIL_REG = r"([\w\.\d]+\@[\w\d]+\.[\w\d]+)"
+        email_reg = r"([\w\.\d]+\@[\w\d]+\.[\w\d]+)"
         for line in lines:
             # matching the regex to each line
-            if re.search(EMAIL_REG, line, re.IGNORECASE):
-                search = re.search(EMAIL_REG, line, re.IGNORECASE)
+            if re.search(email_reg, line, re.IGNORECASE):
+                search = re.search(email_reg, line, re.IGNORECASE)
 
                 # yields creates a generator
                 # generator is used to return
@@ -34,7 +34,7 @@ class SensitiveText:
 
     @staticmethod
     def name_check(lines):
-        nlp = spacy.load("en_core_web_sm")
+        nlp = spacy.load("en_core_web_trf")
         for line in lines:
             doc = nlp(line)
             for X in doc.ents:
