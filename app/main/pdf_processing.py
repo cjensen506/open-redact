@@ -27,8 +27,6 @@ class Redactor:
 
             # getting the rect boxes which consists the matching email regex
             my_sensitive_text = SensitiveText(page.getText("text").split('\n'))
-            #sensitive = my_sensitive_text.emails
-            #sensitive = self.get_sensitive_data(page.getText("text").split('\n'))
 
             for data in my_sensitive_text.emails:
                 areas = page.searchFor(data)
