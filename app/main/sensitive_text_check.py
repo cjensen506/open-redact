@@ -34,7 +34,7 @@ class SensitiveText:
 
     @staticmethod
     def name_check(lines):
-        nlp = spacy.load("en_core_web_trf")
+        nlp = spacy.load("en_core_web_sm")
         for line in lines:
             doc = nlp(line)
             for X in doc.ents:
