@@ -1,7 +1,7 @@
 
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
-FROM python:3.9-slim
+FROM python:3.8-slim
 
 # Allow statements and log messages to immediately appear in the Knative logs
 ENV PYTHONUNBUFFERED True
@@ -14,6 +14,8 @@ COPY . ./
 
 # Install production dependencies.
 RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m spacy download en_core_web_trf
+
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
