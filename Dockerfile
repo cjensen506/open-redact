@@ -14,7 +14,7 @@ COPY . ./
 
 # Install production dependencies.
 RUN pip install --no-cache-dir -r requirements.txt
-RUN python -m spacy download en_core_web_trf
+RUN python -m spacy download en_core_web_lg
 
 
 # Run the web service on container startup. Here we use the gunicorn
