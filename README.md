@@ -36,6 +36,7 @@ python -m spacy download en_core_web_lg
 
 When up and running the system auto generates swagger documentation which can be viewed at http://127.0.0.1:8000/docs#/ where the address and port should be updated for your deployment.
 
+![Screenshot of documentation](https://github.com/cjensen506/open-redact/blob/collateral/open_redact_docs.png)
 
 ## Testing
 From root run the following command to execute all unit tests
