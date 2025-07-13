@@ -30,7 +30,7 @@ const App: React.FC = () => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/redact_pdf', {
         method: 'POST',
         body: formData,
       });
