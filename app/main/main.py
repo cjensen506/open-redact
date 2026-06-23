@@ -1,9 +1,15 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Response
+from fastapi.responses import RedirectResponse
 import io
 import uvicorn
 from app.main.pdf_processing import Redactor
 
 app = FastAPI()
+
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/docs")
 
 
 @app.post("/redact_pdf",
