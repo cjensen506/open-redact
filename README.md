@@ -1,3 +1,13 @@
+---
+title: Open Redact
+emoji: 🔒
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # open-redact
 
 open-redact is an open source api to help anonymize pdf. This can be used can be used to redact names and other identifiable information from resume before review to create a more equitable hiring process.

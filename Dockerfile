@@ -22,4 +22,4 @@ RUN python -m spacy download en_core_web_lg
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD uvicorn app.main.main:app --host 0.0.0.0 --port $PORT
+CMD uvicorn app.main.main:app --host 0.0.0.0 --port ${PORT:-7860}
