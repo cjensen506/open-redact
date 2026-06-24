@@ -12,9 +12,9 @@ pinned: false
 
 open-redact is an open source api to help anonymize pdf. This can be used can be used to redact names and other identifiable information from resume before review to create a more equitable hiring process.
 
-Today open-redact supports the following redactions
-*People's names
-*email address
+open-redact can redact any PII entity type that Microsoft Presidio supports
+(people's names, email addresses, phone numbers, credit card numbers, and
+more). The caller chooses which entity types to redact per request.
 
 ## Configuration
 This package uses [Microsoft Presidio](https://microsoft.github.io/presidio/) to detect personally identifiable information (PII). Presidio combines regex-based recognizers (for entities such as email addresses) with a spaCy named entity recognition model (for entities such as people's names).
@@ -40,6 +40,26 @@ pip install -r requirements.txt
 When up and running the system auto generates swagger documentation which can be viewed at http://127.0.0.1:8000/docs#/ where the address and port should be updated for your deployment.
 
 ![Screenshot of documentation](https://github.com/cjensen506/open-redact/blob/collateral/open_redact_docs.png)
+
+### Redacting a PDF
+
+`POST /redact_pdf` accepts a multipart form with:
+
+* `file` — the PDF to redact (`application/pdf`).
+* `entities` — one or more PII entity types to redact. Repeat the field
+  (`entities=PERSON&entities=EMAIL_ADDRESS`) or pass a comma-separated list
+  (`entities=PERSON,EMAIL_ADDRESS`). At least one entity type is required;
+  a request with none returns `400`, as does an unsupported entity type.
+
+`GET /entities` returns the full list of entity types you can request.
+
+```bash
+curl -X POST http://127.0.0.1:8000/redact_pdf \
+  -F "file=@resume.pdf;type=application/pdf" \
+  -F "entities=PERSON" \
+  -F "entities=EMAIL_ADDRESS" \
+  --output redacted.pdf
+```
 
 ## Testing
 From root run the following command to execute all unit tests
