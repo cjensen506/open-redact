@@ -33,7 +33,9 @@ def _parse_entities(entities: Optional[List[str]]) -> List[str]:
     if not parsed:
         raise HTTPException(
             status_code=400,
-            detail="At least one entity type must be specified. "
+            detail="At least one entity type must be specified. Send 'entities' as "
+                   "multipart/form-data field(s) alongside the file (not as a URL "
+                   "query parameter), e.g. -F \"entities=PERSON\" -F \"entities=EMAIL_ADDRESS\". "
                    "See GET /entities for the supported values.",
         )
 
