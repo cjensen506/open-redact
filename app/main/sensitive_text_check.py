@@ -1,5 +1,13 @@
-import re
-import spacy
+from presidio_analyzer import AnalyzerEngine
+
+# The AnalyzerEngine loads a spaCy NER model, so it is expensive to build.
+# Construct it once at import time and reuse it for every request.
+_analyzer = AnalyzerEngine()
+
+
+def supported_entities():
+    """Return the list of PII entity types Presidio can analyze for English."""
+    return _analyzer.get_supported_entities(language="en")
 
 
 class SensitiveText:
@@ -7,36 +15,12 @@ class SensitiveText:
     # constructor
     def __init__(self, text_to_check):
         self.text_to_check = text_to_check
+        self.emails = self.detect(["EMAIL_ADDRESS"])
+        self.names = self.detect(["PERSON"])
 
-        # static methods work independent of class object
-
-    def __init__(self, text_to_check):
-        self.text_to_check = text_to_check
-        self.emails = self.email_check(self.text_to_check)
-        self.names = self.name_check(self.text_to_check)
-
-    @staticmethod
-    def email_check(lines):
-
-        """ Function to recognize email address """
-
-        # email regex
-        email_reg = r"([\w\.\d]+\@[\w\d]+\.[\w\d]+)"
-        for line in lines:
-            # matching the regex to each line
-            if re.search(email_reg, line, re.IGNORECASE):
-                search = re.search(email_reg, line, re.IGNORECASE)
-
-                # yields creates a generator
-                # generator is used to return
-                # values in between function iterations
-                yield search.group(1)
-
-    @staticmethod
-    def name_check(lines):
-        nlp = spacy.load("en_core_web_lg")
-        for line in lines:
-            doc = nlp(line)
-            for X in doc.ents:
-                if X.label_ == 'PERSON':
-                    yield X.text
+    def detect(self, entities):
+        """Yield each occurrence of the requested Presidio entities, in document order."""
+        for line in self.text_to_check:
+            results = _analyzer.analyze(text=line, entities=entities, language="en")
+            for result in sorted(results, key=lambda r: r.start):
+                yield line[result.start:result.end]

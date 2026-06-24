@@ -1,14 +1,14 @@
 # imports
 import fitz
-import re
 from app.main.sensitive_text_check import SensitiveText
 
 
 class Redactor:
 
     # constructor
-    def __init__(self, mem_area):
+    def __init__(self, mem_area, entities):
         self.mem_area = mem_area
+        self.entities = entities
 
     def redaction(self):
 
@@ -20,25 +20,14 @@ class Redactor:
         # iterating through pages
         for page in doc:
 
-            # _wrapContents is needed for fixing
-            # alignment issues with rect boxes in some
-            # cases where there is alignment issue
-            # page._wrapContents()
+            # getting the rect boxes which consist of the matching sensitive text
+            my_sensitive_text = SensitiveText(page.get_text("text").split('\n'))
 
-            # getting the rect boxes which consists the matching email regex
-            my_sensitive_text = SensitiveText(page.getText("text").split('\n'))
-
-            for data in my_sensitive_text.emails:
-                areas = page.searchFor(data)
+            for data in my_sensitive_text.detect(self.entities):
+                areas = page.search_for(data)
 
                 # drawing outline over sensitive datas
-                [page.addRedactAnnot(area, fill=(0, 0, 0)) for area in areas]
-
-            for data in my_sensitive_text.names:
-                areas = page.searchFor(data)
-
-                # drawing outline over sensitive datas
-                [page.addRedactAnnot(area, fill=(0, 0, 0)) for area in areas]
+                [page.add_redact_annot(area, fill=(0, 0, 0)) for area in areas]
 
             # applying the redaction
             page.apply_redactions()
