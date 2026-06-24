@@ -17,18 +17,11 @@ Today open-redact supports the following redactions
 *email address
 
 ## Configuration
-This package uses a spacy.io named entity recognition model. By default it is set to their en_core_web_lg model, but you can choose a smaller model to make development easier or a larger model for more performance. You can also select models for other languages. Check out https://spacy.io/models/en for English options.
+This package uses [Microsoft Presidio](https://microsoft.github.io/presidio/) to detect personally identifiable information (PII). Presidio combines regex-based recognizers (for entities such as email addresses) with a spaCy named entity recognition model (for entities such as people's names).
 
-2 places need to be edited to use a different model.
-Inside the dockerfile the following line should be edited to install the model of your choice.
-```dockerfile
-RUN python -m spacy download en_core_web_lg
-```
+By default the spaCy model is `en_core_web_lg`, pinned in `requirements.txt`. You can swap in a smaller model to make development easier, a larger model for more accuracy, or a model for another language. Check out https://spacy.io/models/en for English options.
 
-Inside app/main/sensitive_text_check.py the following line should be edited to install the model of your choice.
-```python
-nlp = spacy.load("en_core_web_lg")
-```
+To use a different model, update the pinned model in `requirements.txt` and configure Presidio's NLP engine accordingly (see the [Presidio customization docs](https://microsoft.github.io/presidio/analyzer/customizing_nlp_models/)). The default model is loaded automatically by the `AnalyzerEngine` in `app/main/sensitive_text_check.py`.
 
 ## Installation
 
@@ -37,9 +30,9 @@ Clone from source and build an image using the included docker file
 ```bash
  docker build --tag openredact:python .
 ```
-If not using image be sure manually install your named entity recognition model with the following
+If not using the image, install dependencies (including the spaCy model) with
 ```bash
-python -m spacy download en_core_web_lg
+pip install -r requirements.txt
 ```
 
 ## Usage

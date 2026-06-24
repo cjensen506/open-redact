@@ -25,20 +25,20 @@ class Redactor:
             # cases where there is alignment issue
             # page._wrapContents()
 
-            # getting the rect boxes which consists the matching email regex
-            my_sensitive_text = SensitiveText(page.getText("text").split('\n'))
+            # getting the rect boxes which consist of the matching sensitive text
+            my_sensitive_text = SensitiveText(page.get_text("text").split('\n'))
 
             for data in my_sensitive_text.emails:
-                areas = page.searchFor(data)
+                areas = page.search_for(data)
 
                 # drawing outline over sensitive datas
-                [page.addRedactAnnot(area, fill=(0, 0, 0)) for area in areas]
+                [page.add_redact_annot(area, fill=(0, 0, 0)) for area in areas]
 
             for data in my_sensitive_text.names:
-                areas = page.searchFor(data)
+                areas = page.search_for(data)
 
                 # drawing outline over sensitive datas
-                [page.addRedactAnnot(area, fill=(0, 0, 0)) for area in areas]
+                [page.add_redact_annot(area, fill=(0, 0, 0)) for area in areas]
 
             # applying the redaction
             page.apply_redactions()
